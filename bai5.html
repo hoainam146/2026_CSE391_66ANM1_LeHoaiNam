@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HR Management</title>
+
+    <style>
+        /* ===== RESET ===== */
+        
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            background: #fff;
+        }
+        /* ===== NAVBAR ===== */
+        
+        .navbar {
+            background: linear-gradient(to right, #3f454a, #6b7075);
+        }
+        
+        .navbar-inner {
+            width: 1000px;
+            margin: 0 auto;
+            padding: 6px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: #fff;
+        }
+        
+        .navbar-left span {
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .navbar-left a {
+            color: #ddd;
+            text-decoration: none;
+            margin-right: 10px;
+            font-size: 13px;
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .navbar-right input {
+            height: 22px;
+            padding: 2px 6px;
+            font-size: 12px;
+            border-radius: 3px;
+            border: none;
+        }
+        
+        .navbar-right button {
+            height: 22px;
+            margin-left: 6px;
+            padding: 0 8px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            background: #555;
+            color: #fff;
+            cursor: pointer;
+        }
+        /* ===== EMPLOYEE ===== */
+        
+        .employee-box {
+            width: 1000px;
+            margin: 22px auto;
+            padding: 10px 0;
+        }
+        
+        .employee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .employee-header h2 {
+            margin: 0;
+            font-weight: normal;
+        }
+        
+        .btn-add {
+            background: #4aa3ff;
+            color: #fff;
+            border: none;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        /* ===== TABLE (CHUẨN HÌNH) ===== */
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead th {
+            font-size: 13px;
+            color: #2f2fd0;
+            font-weight: bold;
+            padding: 10px 6px;
+            border-bottom: 2px solid #e5e5ff;
+            text-align: left;
+        }
+        
+        tbody td {
+            font-size: 13px;
+            color: #2f2fd0;
+            padding: 8px 6px;
+            border-bottom: 1px solid #e5e5ff;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody td:first-child {
+            width: 40px;
+            color: #4f6fff;
+        }
+        /* Name + Email giống link */
+        
+        tbody td:nth-child(2),
+        tbody td:nth-child(3) {
+            cursor: pointer;
+        }
+        /* Action */
+        
+        .action button {
+            font-size: 12px;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .btn-edit {
+            background: #ffd966;
+        }
+        
+        .btn-delete {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        /* ===== NEW EMPLOYEE FORM ===== */
+        
+        .card {
+            width: 600px;
+            margin: 18px auto;
+            border: 1px solid #4aa3ff;
+            border-radius: 3px;
+            overflow: visible;
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #4aa3ff, #79bfff);
+            color: #fff;
+            padding: 7px 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        
+        .card-body {
+            padding: 14px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            font-size: 12px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            height: 30px;
+            padding: 4px 6px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4aa3ff;
+            box-shadow: 0 0 2px rgba(74, 163, 255, 0.6);
+        }
+        /* RADIO */
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 4px;
+        }
+        
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+        
+        .radio-group input[type="radio"] {
+            transform: scale(0.75);
+            margin: 0;
+        }
+        /* FOOTER */
+        
+        .card-footer {
+            text-align: right;
+            padding: 8px 14px;
+        }
+        
+        .btn-save {
+            background: #5cb85c;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+        
+        .btn-cancel {
+            background: #aaa;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            font-size: 12px;
+            border-radius: 3px;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-left">
+                <span>HR Management</span>
+                <a href="#">Home</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Search...">
+                <button>Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMPLOYEE TABLE -->
+    <div class="employee-box">
+        <div class="employee-header">
+            <h2>Employee</h2>
+            <button class="btn-add">+ Add</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Position</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Fatima Beatriz</td>
+                    <td>Fatima Beatriz@gmail.com</td>
+                    <td>0985674321</td>
+                    <td>Staff</td>
+                    <td class="action">
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Gabriel Hanna</td>
+                    <td>Gabriel Hanna@gmail.com</td>
+                    <td>0353674231</td>
+                    <td>Staff</td>
+                    <td class="action">
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Charles Diya</td>
+                    <td>Charles Diya@gmail.com</td>
+                    <td>0347658833</td>
+                    <td>Staff</td>
+                    <td class="action">
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Frank Lamdo</td>
+                    <td>Frank Lamdo@gmail.com</td>
+                    <td>0975444768</td>
+                    <td>Manager</td>
+                    <td class="action">
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Louis Tom</td>
+                    <td>Louis Tom@gmail.com</td>
+                    <td>0789568223</td>
+                    <td>Staff</td>
+                    <td class="action">
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- NEW EMPLOYEE -->
+    <div class="card">
+        <div class="card-header">
+            <span>New Employee</span>
+            <span style="cursor:pointer">×</span>
+        </div>
+
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text">
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <select>
+                    <option>-- Select Position --</option>
+                    <option>Staff</option>
+                    <option>Manager</option>
+                    <option>CEO</option>
+                </select>
+                </div>
+            </div>
+
+            <label>Sex</label>
+            <div class="radio-group">
+                <label><input type="radio" name="sex"> Male</label>
+                <label><input type="radio" name="sex"> Female</label>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button class="btn-save">Save</button>
+            <button class="btn-cancel">Cancel</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
