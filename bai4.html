@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bài tập 04 - Employee Form</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            width: 720px;
+        }
+        /* ===== ACTION BAR (CUỐI FORM) ===== */
+        
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-top: 1px solid #aaa;
+            padding: 6px 0;
+            margin-top: 18px;
+            font-size: 12px;
+        }
+        
+        .left-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .nav-group {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .nav-btn {
+            width: 18px;
+            height: 18px;
+            border: 1px solid #777;
+            background: #eee;
+            font-size: 11px;
+            line-height: 16px;
+            text-align: center;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        .required-note {
+            font-size: 12px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .btn {
+            font-size: 12px;
+            padding: 3px 12px;
+            border: 1px solid #4a6fb3;
+            background: #6b8fd6;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        .btn.cancel {
+            background: #7da0e0;
+        }
+        /* ===== HEADINGS ===== */
+        
+        h2 {
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 4px;
+            margin: 20px 0 10px;
+        }
+        /* ===== TABLE ===== */
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        td {
+            font-size: 13px;
+            padding: 3px 0;
+            vertical-align: middle;
+        }
+        
+        .label {
+            width: 180px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        /* ===== INPUT ===== */
+        
+        input,
+        select {
+            height: 22px;
+            padding: 2px 4px;
+            border: 1px solid #999;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 6px;
+            border: none;
+            font-size: 13px;
+            resize: none;
+        }
+        /* ===== RADIO / CHECKBOX ===== */
+        
+        .radio-group label,
+        .checkbox-group label {
+            display: block;
+            line-height: 1;
+        }
+        /* ===== SELECT STYLE ===== */
+        
+        .word-select {
+            position: relative;
+        }
+        
+        .word-select select {
+            width: 100%;
+            padding: 2px 26px 2px 6px;
+            appearance: none;
+            background: linear-gradient(#fff, #f1f1f1);
+        }
+        
+        .word-select::after {
+            content: "▼";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            pointer-events: none;
+        }
+        /* ===== SSN ===== */
+        
+        .ssn-wrap {
+            position: relative;
+            width: 88%;
+        }
+        
+        .ssn-wrap input {
+            width: 100%;
+            padding-right: 24px;
+        }
+        
+        .ssn-icon {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            border: 1px solid #999;
+            border-radius: 50%;
+            font-size: 10px;
+            text-align: center;
+            line-height: 14px;
+        }
+        /* ===== NOTES ===== */
+        
+        .editor-box {
+            border: 1px solid #aaa;
+        }
+        
+        .toolbar {
+            background: #eee;
+            padding: 3px 5px;
+            font-size: 12px;
+            border-bottom: 1px solid #aaa;
+        }
+        /* ===== CAPTCHA ===== */
+        
+        .captcha-box {
+            font-family: "Courier New", monospace;
+            font-size: 22px;
+            letter-spacing: 6px;
+            font-weight: bold;
+        }
+        
+        .captcha-note {
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h2>Basic Info</h2>
+        <table>
+            <tr>
+                <td class="label">Employee ID</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td class="label">Last Name</td>
+                <td>Dodsworth</td>
+            </tr>
+            <tr>
+                <td class="label">First Name</td>
+                <td><input type="text" value="Anne" style="width:88%;"></td>
+            </tr>
+
+            <tr>
+                <td class="label">Gender</td>
+                <td class="radio-group">
+                    <label><input type="radio"> Male</label>
+                    <label><input type="radio"> Female</label>
+                    <label><input type="radio"> XXX</label>
+                    <label><input type="radio" checked> ZZZ</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Title</td>
+                <td><input type="text" value="Sales Representative" style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Suffix</td>
+                <td><input type="text" value="Ms." style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">BirthDate</td>
+                <td><input type="text" value="1969-07-02 00:00:00" style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">HireDate</td>
+                <td><input type="text" value="1994-11-15 00:00:00" style="width:88%;"></td>
+            </tr>
+
+            <tr>
+                <td class="label">SSN # (if applicable)</td>
+                <td>
+                    <div class="ssn-wrap">
+                        <input type="text">
+                        <span class="ssn-icon">?</span>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Reports To</td>
+                <td>
+                    <div class="word-select" style="width:95px;">
+                        <select>
+<option>Buchanan</option>
+<option>Fuller</option>
+<option>Leverling</option>
+</select>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <h2>Contact Info</h2>
+        <table>
+            <tr>
+                <td class="label">Email</td>
+                <td><input type="email" placeholder="name@example.com" style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Address</td>
+                <td><input type="text" value="7 Houndstooth Rd." style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">City</td>
+                <td><input type="text" value="London" style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Region</td>
+                <td><input type="text" style="width:88%;"></td>
+            </tr>
+            <tr>
+                <td class="label">Postal Code</td>
+                <td><input type="text" value="WG2 7LT" style="width:88%;"></td>
+            </tr>
+
+            <tr>
+                <td class="label">Country</td>
+                <td>
+                    <div class="word-select" style="width:150px;">
+                        <select>
+<option>Russian Federation</option>
+<option selected>United Kingdom</option>
+<option>USA</option>
+</select>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">US Home Phone</td>
+                <td><input type="text" value="(234)234-2342" style="width:88%;"></td>
+            </tr>
+        </table>
+
+        <h2>Optional Info</h2>
+        <table>
+            <tr>
+                <td class="label">Notes</td>
+                <td>
+                    <div class="editor-box" style="width:88%;">
+                        <div class="toolbar"><b>B</b> <i>I</i> <u>U</u> | H1 H2 H3 | ✖</div>
+                        <textarea>
+Anne has a BA degree in English from St. Lawrence College.
+She is fluent in French and German.ZZZ
+</textarea>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label" rowspan="2">Preferred Shift</td>
+                <td class="checkbox-group"><label><input type="checkbox"> Regular</label></td>
+            </tr>
+            <tr>
+                <td class="checkbox-group"><label><input type="checkbox" checked> Gravy Yard</label></td>
+            </tr>
+
+            <tr>
+                <td class="label">Active?</td>
+                <td><input type="checkbox" checked></td>
+            </tr>
+
+            <tr>
+                <td class="label">Are you human?</td>
+                <td>
+                    <div class="captcha-box">TIDAWO</div>
+                    <div class="captcha-note">Click to change</div>
+                    <input type="text" style="width:88%;">
+                </td>
+            </tr>
+        </table>
+
+        <!-- ===== ACTION BAR CUỐI ===== -->
+        <div class="action-bar">
+            <div class="left-actions">
+                <div class="nav-group">
+                    <button class="nav-btn">◀</button>
+                    <button class="nav-btn">▶</button>
+                </div>
+                <span class="required-note">* required</span>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn submit">Submit</button>
+                <button class="btn cancel">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
