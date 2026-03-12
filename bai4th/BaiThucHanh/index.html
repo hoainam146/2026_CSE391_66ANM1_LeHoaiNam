@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1 - Quản Lý Điểm Sinh Viên</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Quản Lý Điểm Sinh Viên</h1>
+
+        <!-- Form thêm sinh viên -->
+        <div class="form-container">
+            <input type="text" id="studentName" placeholder="Họ và tên">
+            <input type="number" id="studentScore" placeholder="Điểm (0-10)" min="0" max="10">
+            <button id="addBtn">Thêm</button>
+        </div>
+
+        <!-- Bộ lọc và tìm kiếm -->
+        <div class="controls-container">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên...">
+            <select id="filterSelect">
+                <option value="all">Tất cả</option>
+                <option value="Giỏi">Giỏi</option>
+                <option value="Khá">Khá</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Yếu">Yếu</option>
+            </select>
+        </div>
+
+        <!-- Bảng hiển thị -->
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ và tên</th>
+                    <th id="scoreHeader" class="sortable">Điểm <span></span></th>
+                    <th>Xếp loại</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="studentList">
+                <!-- Dữ liệu sẽ được render ở đây -->
+            </tbody>
+        </table>
+        <p id="noResults" class="hidden">Không có kết quả.</p>
+        <div id="statistics"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

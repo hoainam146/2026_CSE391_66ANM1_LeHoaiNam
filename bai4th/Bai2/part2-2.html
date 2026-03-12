@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2.2 - Form Đặt Hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 5px rgba(30, 60, 114, 0.5);
+        }
+        
+        input.valid,
+        select.valid {
+            border-color: #4caf50;
+            background-color: #f0f8f5;
+        }
+        
+        input.invalid,
+        select.invalid {
+            border-color: #f44336;
+            background-color: #fff5f5;
+        }
+        
+        .error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .char-counter {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .char-counter.exceeded {
+            color: #f44336;
+            font-weight: 600;
+        }
+        
+        .total-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            text-align: right;
+        }
+        
+        .radio-group {
+            margin-bottom: 15px;
+        }
+        
+        .radio-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .radio-item label {
+            margin-bottom: 0;
+            margin-left: 5px;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .form-container.hidden {
+            display: none;
+        }
+        
+        .confirmation {
+            display: none;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #1e3c72;
+        }
+        
+        .confirmation.show {
+            display: block;
+        }
+        
+        .confirmation h3 {
+            margin-bottom: 15px;
+            color: #1e3c72;
+            font-size: 18px;
+        }
+        
+        .confirmation-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .confirmation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .confirmation-item strong {
+            color: #333;
+        }
+        
+        .confirmation-item span {
+            color: #666;
+        }
+        
+        .confirmation-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-top: 15px;
+            border-top: 2px solid #1e3c72;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .confirmation-buttons button {
+            flex: 1;
+        }
+        
+        .confirmation-buttons button:last-child {
+            background: #ccc;
+            color: #333;
+        }
+        
+        .confirmation-buttons button:last-child:hover {
+            background: #bbb;
+        }
+        
+        .success-message {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-message h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🛒 Đặt Hàng Trực Tuyến</h1>
+
+        <!-- Form -->
+        <form id="orderForm" class="form-container">
+            <!-- Sản phẩm -->
+            <div class="form-group">
+                <label for="product">Tên sản phẩm:</label>
+                <select id="product">
+                    <option value="">-- Chọn sản phẩm --</option>
+                    <option value="Áo thun">Áo thun (150.000đ)</option>
+                    <option value="Quần jean">Quần jean (250.000đ)</option>
+                    <option value="Giày sneaker">Giày sneaker (350.000đ)</option>
+                    <option value="Mũ thời trang">Mũ thời trang (80.000đ)</option>
+                </select>
+                <div class="error" id="productError"></div>
+            </div>
+
+            <!-- Số lượng -->
+            <div class="form-group">
+                <label for="quantity">Số lượng:</label>
+                <input type="number" id="quantity" placeholder="Nhập số lượng (1-99)" min="1" max="99" />
+                <div class="error" id="quantityError"></div>
+            </div>
+
+            <!-- Ngày giao hàng -->
+            <div class="form-group">
+                <label for="deliveryDate">Ngày giao hàng:</label>
+                <input type="date" id="deliveryDate" />
+                <div class="error" id="deliveryDateError"></div>
+            </div>
+
+            <!-- Địa chỉ giao -->
+            <div class="form-group">
+                <label for="address">Địa chỉ giao hàng:</label>
+                <input type="text" id="address" placeholder="Nhập địa chỉ chi tiết" />
+                <div class="error" id="addressError"></div>
+            </div>
+
+            <!-- Ghi chú -->
+            <div class="form-group">
+                <label for="notes">Ghi chú (Không bắt buộc):</label>
+                <textarea id="notes" placeholder="Ghi chú thêm..." rows="3"></textarea>
+                <div class="char-counter" id="charCounter">0/200</div>
+                <div class="error" id="notesError"></div>
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class="total-price">
+                Tổng tiền: <span id="totalPrice">0đ</span>
+            </div>
+
+            <!-- Phương thức thanh toán -->
+            <div class="form-group">
+                <label>Phương thức thanh toán:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="cod" name="payment" value="COD" />
+                        <label for="cod">COD (Thanh toán khi nhận hàng)</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="transfer" name="payment" value="Chuyển khoản" />
+                        <label for="transfer">Chuyển khoản ngân hàng</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="wallet" name="payment" value="Ví điện tử" />
+                        <label for="wallet">Ví điện tử</label>
+                    </div>
+                </div>
+                <div class="error" id="paymentError"></div>
+            </div>
+
+            <!-- Nút submit -->
+            <button type="submit">Tiếp Tục</button>
+        </form>
+
+        <!-- Xác nhận đơn hàng -->
+        <div id="confirmation" class="confirmation">
+            <h3>📋 Xác Nhận Thông Tin Đơn Hàng</h3>
+            <div class="confirmation-item">
+                <strong>Sản phẩm:</strong>
+                <span id="confirmProduct"></span>
+            </div>
+            <div class="confirmation-item">
+                <strong>Số lượng:</strong>
+                <span id="confirmQuantity"></span>
+            </div>
+            <div class="confirmation-item">
+                <strong>Ngày giao:</strong>
+                <span id="confirmDeliveryDate"></span>
+            </div>
+            <div class="confirmation-item">
+                <strong>Địa chỉ:</strong>
+                <span id="confirmAddress"></span>
+            </div>
+            <div class="confirmation-item">
+                <strong>Thanh toán:</strong>
+                <span id="confirmPayment"></span>
+            </div>
+            <div class="confirmation-total">
+                <strong>Tổng cộng:</strong>
+                <span id="confirmTotal"></span>
+            </div>
+            <div class="confirmation-buttons">
+                <button type="button" id="confirmBtn">✓ Xác Nhận Đặt Hàng</button>
+                <button type="button" id="cancelBtn">✕ Hủy</button>
+            </div>
+        </div>
+
+        <!-- Thông báo thành công -->
+        <div id="successMessage" class="success-message">
+            <h2>🎉 Đặt Hàng Thành Công!</h2>
+            <p>Cảm ơn bạn đã tin tưởng chúng tôi.</p>
+            <p>Đơn hàng của bạn sẽ được giao trong thời gian sớm nhất.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('orderForm');
+            const confirmation = document.getElementById('confirmation');
+            const successMessage = document.getElementById('successMessage');
+            const productSelect = document.getElementById('product');
+            const quantityInput = document.getElementById('quantity');
+            const notesInput = document.getElementById('notes');
+            const charCounter = document.getElementById('charCounter');
+
+            // Prices
+            const prices = {
+                'Áo thun': 150000,
+                'Quần jean': 250000,
+                'Giày sneaker': 350000,
+                'Mũ thời trang': 80000
+            };
+
+            // Clear error
+            const clearError = (fieldId) => {
+                const field = document.getElementById(fieldId);
+                const errorDiv = document.getElementById(fieldId + 'Error');
+                if (field) field.classList.remove('invalid');
+                if (field) field.classList.add('valid');
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                    errorDiv.classList.remove('show');
+                }
+            };
+
+            // Show error
+            const showError = (fieldId, message) => {
+                const field = document.getElementById(fieldId);
+                const errorDiv = document.getElementById(fieldId + 'Error');
+                if (field) field.classList.add('invalid');
+                if (field) field.classList.remove('valid');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.classList.add('show');
+                }
+            };
+
+            // Validate Product
+            const validateProduct = () => {
+                const product = productSelect.value;
+                if (!product) {
+                    showError('product', 'Vui lòng chọn sản phẩm');
+                    return false;
+                }
+                clearError('product');
+                return true;
+            };
+
+            // Validate Quantity
+            const validateQuantity = () => {
+                const quantity = quantityInput.value.trim();
+                if (!quantity) {
+                    showError('quantity', 'Vui lòng nhập số lượng');
+                    return false;
+                }
+                const num = parseInt(quantity);
+                if (isNaN(num) || num < 1 || num > 99) {
+                    showError('quantity', 'Số lượng phải từ 1 đến 99');
+                    return false;
+                }
+                clearError('quantity');
+                return true;
+            };
+
+            // Validate Delivery Date
+            const validateDeliveryDate = () => {
+                const deliveryDate = document.getElementById('deliveryDate').value;
+                if (!deliveryDate) {
+                    showError('deliveryDate', 'Vui lòng chọn ngày giao');
+                    return false;
+                }
+                const selectedDate = new Date(deliveryDate);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate < today) {
+                    showError('deliveryDate', 'Ngày giao không thể là ngày trong quá khứ');
+                    return false;
+                }
+
+                const maxDate = new Date();
+                maxDate.setDate(maxDate.getDate() + 30);
+                if (selectedDate > maxDate) {
+                    showError('deliveryDate', 'Ngày giao không thể quá 30 ngày từ hôm nay');
+                    return false;
+                }
+
+                clearError('deliveryDate');
+                return true;
+            };
+
+            // Validate Address
+            const validateAddress = () => {
+                const address = document.getElementById('address').value.trim();
+                if (!address) {
+                    showError('address', 'Vui lòng nhập địa chỉ');
+                    return false;
+                }
+                if (address.length < 10) {
+                    showError('address', 'Địa chỉ phải tối thiểu 10 ký tự');
+                    return false;
+                }
+                clearError('address');
+                return true;
+            };
+
+            // Validate Notes
+            const validateNotes = () => {
+                const notes = notesInput.value;
+                if (notes.length > 200) {
+                    showError('notes', 'Ghi chú không được vượt quá 200 ký tự');
+                    return false;
+                }
+                clearError('notes');
+                return true;
+            };
+
+            // Validate Payment
+            const validatePayment = () => {
+                const payments = document.getElementsByName('payment');
+                const isSelected = Array.from(payments).some(p => p.checked);
+                if (!isSelected) {
+                    document.getElementById('paymentError').textContent = 'Vui lòng chọn phương thức thanh toán';
+                    document.getElementById('paymentError').classList.add('show');
+                    return false;
+                }
+                document.getElementById('paymentError').textContent = '';
+                document.getElementById('paymentError').classList.remove('show');
+                return true;
+            };
+
+            // Calculate total price
+            const updateTotalPrice = () => {
+                const product = productSelect.value;
+                const quantity = parseInt(quantityInput.value) || 0;
+
+                if (product && quantity > 0) {
+                    const price = prices[product];
+                    const total = price * quantity;
+                    document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN') + 'đ';
+                } else {
+                    document.getElementById('totalPrice').textContent = '0đ';
+                }
+            };
+
+            // Character counter for notes
+            notesInput.addEventListener('input', () => {
+                const length = notesInput.value.length;
+                const counter = document.getElementById('charCounter');
+                counter.textContent = `${length}/200`;
+
+                if (length > 200) {
+                    counter.classList.add('exceeded');
+                } else {
+                    counter.classList.remove('exceeded');
+                }
+
+                if (document.getElementById('notesError').classList.contains('show')) {
+                    validateNotes();
+                }
+            });
+
+            // Remove error on input
+            productSelect.addEventListener('change', () => {
+                if (document.getElementById('productError').classList.contains('show')) {
+                    validateProduct();
+                }
+                updateTotalPrice();
+            });
+
+            quantityInput.addEventListener('input', () => {
+                if (document.getElementById('quantityError').classList.contains('show')) {
+                    validateQuantity();
+                }
+                updateTotalPrice();
+            });
+
+            document.getElementById('deliveryDate').addEventListener('change', () => {
+                if (document.getElementById('deliveryDateError').classList.contains('show')) {
+                    validateDeliveryDate();
+                }
+            });
+
+            document.getElementById('address').addEventListener('input', () => {
+                if (document.getElementById('addressError').classList.contains('show')) {
+                    validateAddress();
+                }
+            });
+
+            // Form submit
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const isValid1 = validateProduct();
+                const isValid2 = validateQuantity();
+                const isValid3 = validateDeliveryDate();
+                const isValid4 = validateAddress();
+                const isValid5 = validateNotes();
+                const isValid6 = validatePayment();
+
+                if (isValid1 & isValid2 & isValid3 & isValid4 & isValid5 & isValid6) {
+                    // Show confirmation
+                    document.getElementById('confirmProduct').textContent = productSelect.value;
+                    document.getElementById('confirmQuantity').textContent = quantityInput.value;
+                    document.getElementById('confirmDeliveryDate').textContent = document.getElementById('deliveryDate').value;
+                    document.getElementById('confirmAddress').textContent = document.getElementById('address').value;
+                    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+                    document.getElementById('confirmPayment').textContent = paymentMethod;
+                    document.getElementById('confirmTotal').textContent = document.getElementById('totalPrice').textContent;
+
+                    form.classList.add('hidden');
+                    confirmation.classList.add('show');
+                }
+            });
+
+            // Confirm order
+            document.getElementById('confirmBtn').addEventListener('click', () => {
+                confirmation.classList.remove('show');
+                successMessage.classList.add('show');
+            });
+
+            // Cancel confirmation
+            document.getElementById('cancelBtn').addEventListener('click', () => {
+                confirmation.classList.remove('show');
+                form.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>

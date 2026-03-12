@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 3.2 - Multi-step Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 550px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        /* Progress Bar */
+        
+        .progress {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .step {
+            flex: 1;
+            height: 6px;
+            background: #eee;
+            margin: 0 5px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        
+        .step.active {
+            background: #667eea;
+        }
+        
+        .step.completed {
+            background: #4caf50;
+        }
+        
+        .progress-info {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+        /* Steps */
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+        
+        input.valid {
+            border-color: #4caf50;
+            background-color: #f0f8f5;
+        }
+        
+        input.invalid {
+            border-color: #f44336;
+            background-color: #fff5f5;
+        }
+        
+        .error {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .radio-group {
+            margin-bottom: 15px;
+        }
+        
+        .radio-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .radio-item label {
+            margin-bottom: 0;
+            margin-left: 5px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .step-form {
+            display: none;
+        }
+        
+        .step-form.show {
+            display: block;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        /* Buttons */
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        button.back {
+            background: #999;
+        }
+        
+        button.back:hover {
+            background: #777;
+        }
+        /* Summary */
+        
+        .summary {
+            display: none;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .summary.show {
+            display: block;
+        }
+        
+        .summary h2 {
+            border: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item {
+            margin-bottom: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 3px;
+        }
+        
+        .summary-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .success-message {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-message h2 {
+            color: white;
+            border: none;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .success-message p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📋 Đăng Ký Nhiều Bước</h1>
+        <p class="subtitle">Điền đầy đủ thông tin của bạn</p>
+
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="step active" id="step1Indicator"></div>
+                <div class="step" id="step2Indicator"></div>
+                <div class="step" id="step3Indicator"></div>
+            </div>
+            <div class="progress-info">
+                Bước <span id="currentStep">1</span> / 3
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form id="multiStepForm">
+            <!-- Bước 1: Thông tin cá nhân -->
+            <div id="step1" class="step-form show">
+                <h2>👤 Bước 1: Thông Tin Cá Nhân</h2>
+
+                <div class="form-group">
+                    <label for="fullName">Họ và tên:</label>
+                    <input type="text" id="fullName" placeholder="Nhập họ và tên" />
+                    <div class="error" id="fullNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateOfBirth">Ngày sinh:</label>
+                    <input type="date" id="dateOfBirth" />
+                    <div class="error" id="dateOfBirthError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Giới tính:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="male" name="gender" value="Nam" />
+                            <label for="male">Nam</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="female" name="gender" value="Nữ" />
+                            <label for="female">Nữ</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="other" name="gender" value="Khác" />
+                            <label for="other">Khác</label>
+                        </div>
+                    </div>
+                    <div class="error" id="genderError"></div>
+                </div>
+            </div>
+
+            <!-- Bước 2: Thông tin tài khoản -->
+            <div id="step2" class="step-form">
+                <h2>🔐 Bước 2: Thông Tin Tài Khoản</h2>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Nhập email" />
+                    <div class="error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu (tối thiểu 8 ký tự)" />
+                    <div class="error" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu:</label>
+                    <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" />
+                    <div class="error" id="confirmPasswordError"></div>
+                </div>
+            </div>
+
+            <!-- Bước 3: Xác nhận -->
+            <div id="step3" class="step-form">
+                <h2>✓ Bước 3: Xác Nhận Thông Tin</h2>
+
+                <div class="summary" id="summary">
+                    <h2>📝 Tóm tắt thông tin</h2>
+
+                    <div class="summary-item">
+                        <div class="summary-label">Họ và tên</div>
+                        <div class="summary-value" id="summaryFullName"></div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-label">Ngày sinh</div>
+                        <div class="summary-value" id="summaryDateOfBirth"></div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-label">Giới tính</div>
+                        <div class="summary-value" id="summaryGender"></div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-label">Email</div>
+                        <div class="summary-value" id="summaryEmail"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút điều hướng -->
+            <div class="button-group">
+                <button type="button" id="backBtn" class="back" style="display: none;">← Quay Lại</button>
+                <button type="button" id="nextBtn">Tiếp Theo →</button>
+                <button type="submit" id="submitBtn" style="display: none;">Hoàn Thành ✓</button>
+            </div>
+        </form>
+
+        <!-- Thông báo thành công -->
+        <div id="successMessage" class="success-message">
+            <h2>🎉 Đăng Ký Thành Công!</h2>
+            <p>Chào mừng <span id="userGreeting"></span>,</p>
+            <p>Tài khoản của bạn đã được tạo thành công.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // State
+            let currentStep = 1;
+            const totalSteps = 3;
+            const formData = {
+                fullName: '',
+                dateOfBirth: '',
+                gender: '',
+                email: '',
+                password: '',
+                confirmPassword: ''
+            };
+
+            // Elements
+            const form = document.getElementById('multiStepForm');
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const userGreeting = document.getElementById('userGreeting');
+
+            // Update progress bar
+            const updateProgressBar = () => {
+                document.getElementById('currentStep').textContent = currentStep;
+                for (let i = 1; i <= totalSteps; i++) {
+                    const indicator = document.getElementById('step' + i + 'Indicator');
+                    indicator.classList.remove('active', 'completed');
+                    if (i < currentStep) {
+                        indicator.classList.add('completed');
+                    } else if (i === currentStep) {
+                        indicator.classList.add('active');
+                    }
+                }
+            };
+
+            // Show/hide steps
+            const showStep = (stepNum) => {
+                for (let i = 1; i <= totalSteps; i++) {
+                    const stepEl = document.getElementById('step' + i);
+                    if (i === stepNum) {
+                        stepEl.classList.add('show');
+                    } else {
+                        stepEl.classList.remove('show');
+                    }
+                }
+            };
+
+            // Update button visibility
+            const updateButtons = () => {
+                backBtn.style.display = currentStep > 1 ? 'block' : 'none';
+                nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
+                submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+            };
+
+            // Utility: Show error
+            const showError = (fieldId, message) => {
+                const field = document.getElementById(fieldId);
+                const errorDiv = document.getElementById(fieldId + 'Error');
+                if (field) {
+                    field.classList.add('invalid');
+                    field.classList.remove('valid');
+                }
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.classList.add('show');
+                }
+            };
+
+            // Utility: Clear error
+            const clearError = (fieldId) => {
+                const field = document.getElementById(fieldId);
+                const errorDiv = document.getElementById(fieldId + 'Error');
+                if (field) {
+                    field.classList.remove('invalid');
+                    field.classList.add('valid');
+                }
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                    errorDiv.classList.remove('show');
+                }
+            };
+
+            // Step 1 Validation
+            const validateStep1 = () => {
+                let isValid = true;
+
+                const fullName = document.getElementById('fullName').value.trim();
+                if (!fullName) {
+                    showError('fullName', 'Họ và tên không được trống');
+                    isValid = false;
+                } else if (fullName.length < 3) {
+                    showError('fullName', 'Họ và tên phải từ 3 ký tự trở lên');
+                    isValid = false;
+                } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(fullName)) {
+                    showError('fullName', 'Họ và tên chỉ chứa chữ cái');
+                    isValid = false;
+                } else {
+                    clearError('fullName');
+                    formData.fullName = fullName;
+                }
+
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                if (!dateOfBirth) {
+                    showError('dateOfBirth', 'Ngày sinh không được trống');
+                    isValid = false;
+                } else {
+                    const selectedDate = new Date(dateOfBirth);
+                    const today = new Date();
+                    if (selectedDate >= today) {
+                        showError('dateOfBirth', 'Ngày sinh phải là ngày trong quá khứ');
+                        isValid = false;
+                    } else {
+                        clearError('dateOfBirth');
+                        formData.dateOfBirth = dateOfBirth;
+                    }
+                }
+
+                const genders = document.getElementsByName('gender');
+                const isGenderSelected = Array.from(genders).some(g => g.checked);
+                if (!isGenderSelected) {
+                    document.getElementById('genderError').textContent = 'Vui lòng chọn giới tính';
+                    document.getElementById('genderError').classList.add('show');
+                    isValid = false;
+                } else {
+                    document.getElementById('genderError').textContent = '';
+                    document.getElementById('genderError').classList.remove('show');
+                    formData.gender = document.querySelector('input[name="gender"]:checked').value;
+                }
+
+                return isValid;
+            };
+
+            // Step 2 Validation
+            const validateStep2 = () => {
+                let isValid = true;
+
+                const email = document.getElementById('email').value.trim();
+                if (!email) {
+                    showError('email', 'Email không được trống');
+                    isValid = false;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    showError('email', 'Email không đúng định dạng');
+                    isValid = false;
+                } else {
+                    clearError('email');
+                    formData.email = email;
+                }
+
+                const password = document.getElementById('password').value;
+                if (!password) {
+                    showError('password', 'Mật khẩu không được trống');
+                    isValid = false;
+                } else if (password.length < 8) {
+                    showError('password', 'Mật khẩu phải từ 8 ký tự trở lên');
+                    isValid = false;
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                    showError('password', 'Mật khẩu phải có chữ hoa, chữ thường và chữ số');
+                    isValid = false;
+                } else {
+                    clearError('password');
+                    formData.password = password;
+                }
+
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (!confirmPassword) {
+                    showError('confirmPassword', 'Xác nhận mật khẩu không được trống');
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    showError('confirmPassword', 'Mật khẩu xác nhận không khớp');
+                    isValid = false;
+                } else {
+                    clearError('confirmPassword');
+                    formData.confirmPassword = confirmPassword;
+                }
+
+                return isValid;
+            };
+
+            // Update summary on step 3
+            const updateSummary = () => {
+                document.getElementById('summaryFullName').textContent = formData.fullName;
+                document.getElementById('summaryDateOfBirth').textContent = formData.dateOfBirth;
+                document.getElementById('summaryGender').textContent = formData.gender;
+                document.getElementById('summaryEmail').textContent = formData.email;
+                document.getElementById('summary').classList.add('show');
+            };
+
+            // Next button
+            nextBtn.addEventListener('click', () => {
+                let isValid = false;
+                if (currentStep === 1) {
+                    isValid = validateStep1();
+                } else if (currentStep === 2) {
+                    isValid = validateStep2();
+                    if (isValid) {
+                        updateSummary();
+                    }
+                }
+
+                if (isValid && currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                    updateProgressBar();
+                    updateButtons();
+                    window.scrollTo(0, 0);
+                }
+            });
+
+            // Back button
+            backBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                    updateProgressBar();
+                    updateButtons();
+                    window.scrollTo(0, 0);
+                }
+            });
+
+            // Submit form
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                userGreeting.textContent = formData.fullName;
+                form.style.display = 'none';
+                successMessage.classList.add('show');
+            });
+
+            // Clear errors on input
+            document.getElementById('fullName').addEventListener('input', () => {
+                if (document.getElementById('fullNameError').classList.contains('show')) {
+                    clearError('fullName');
+                }
+            });
+            document.getElementById('email').addEventListener('input', () => {
+                if (document.getElementById('emailError').classList.contains('show')) {
+                    clearError('email');
+                }
+            });
+            document.getElementById('password').addEventListener('input', () => {
+                if (document.getElementById('passwordError').classList.contains('show')) {
+                    clearError('password');
+                }
+            });
+            document.getElementById('confirmPassword').addEventListener('input', () => {
+                if (document.getElementById('confirmPasswordError').classList.contains('show')) {
+                    clearError('confirmPassword');
+                }
+            });
+
+            // Initialize
+            updateProgressBar();
+            updateButtons();
+        });
+    </script>
+</body>
+
+</html>
